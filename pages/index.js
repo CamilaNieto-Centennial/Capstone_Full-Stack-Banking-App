@@ -1,102 +1,134 @@
 import Head from 'next/head';
-import Image from 'next/image'
+//import Image from 'next/image'
 import Layout, {siteTitle} from '../components/layout';
-import styles from '../styles/page.module.css'
+import {Table, BankForm} from '../components/context';
+import { UserContext, UserProvider } from '../components/userContext';
+import NavBar from '../components/navbar';
+import React from 'react'
 
-export default function Home() {
-  return (
+import {
+    Title,
+    Text,
+    Anchor,
+    rem,
+    createStyles,
+    Paper,
+    Button,
+    MantineProvider,
+    Container,
+    Group,
+    PaperProps,
+    Stack,
+    Card,
+    Image,
+    TextInput,
+    PasswordInput,
+    Checkbox,
+} from '@mantine/core';
+
+const useStyles = createStyles((theme) => ({
+    full_container: {
+        height: `calc(100vh - 60px)`,
+        position: 'relative',
+        background: 'linear-gradient(20deg, purple, darkslateblue);',
+    },
+
+    
+
+    form_container: {
+      width: '50%',
+      height: '100%',
+      float: 'left',
+      position: 'relative',
+      [theme.fn.smallerThan('sm')]: {
+          width: '100%',
+      },
+    },
+
+    image_container: {
+      width: '50%',
+      height: '100%',
+      float: 'left',
+      background: 'linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url("/images/credit_card1.png") center/cover no-repeat',
+      
+      [theme.fn.smallerThan('sm')]: {
+          display: 'none',
+      },
+    },
+
+    title: {
+        color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+        fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+    },
+}));
+
+
+export function Home() {
+    const { classes } = useStyles();
+
+    return (
+      <Layout>
+        <Head>
+            <title>{siteTitle}</title>
+        </Head>
+        <div className={classes.full_container}>
+          <Paper className={classes.form_container} radius={0} p={30}>
+            <Title order={2} className={classes.title} ta="center"  mb="xs">Welcome to the Banking App Name!</Title>
+            <Image
+              src="/images/bank.png"
+              height={240}
+              alt="Bank Icon"
+              fit='contain'
+            />
+          </Paper>
+          <div className={classes.image_container}></div>
+        </div>
+      </Layout>
+    );
+}
+
+
+
+{/*
+function Home(){
+  const ctx = React.useContext(UserContext)
+  let current_user = ctx.current_user;
+  return(
     <Layout>
-      <Head>
-        <title>{siteTitle}</title>
-      </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>app/page.js</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
-          </div>
+        <Head>
+            <title>{siteTitle}</title>
+        </Head>
+        <div className="container-big">
+            <div className="container-left">
+                <div className="row subcontainer">
+                    <div className="col col-8 col-sm-7 col-md-6 col-lg-7 col-xl-6 my-auto mx-auto">
+                        <Card
+                            txtcolor="black"
+                            header="BadBank Landing Page"
+                            headercolor = "white"
+                            headerBackground = "#592e83"
+                            title={`Welcome to the bank ${current_user[0]}!`}
+                            text="You can use this bank"
+                            body={(<img src="./img/bank.png" className="img-fluid" alt="Responsive image"></img>)}
+                        />
+                    </div>
+                </div>
+            </div>
+            <div className="container-right"></div>
         </div>
-
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p>Explore the Next.js 13 playground.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p>
-              Instantly deploy your Next.js site to a shareable URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
     </Layout>
+  )
+}
+*/}
+
+/* Set the Global User Context to Home Component */
+export default function HomeWithContext(){
+  return (
+  <>
+    <NavBar />
+    <UserProvider>
+      <Home />
+    </UserProvider>
+  </>
   )
 }
