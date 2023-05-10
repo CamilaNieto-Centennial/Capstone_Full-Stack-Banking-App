@@ -68,6 +68,7 @@ export function Home() {
               alt="Bank Icon"
               fit='contain'
             />
+            <br />
           </Paper>
           <div className={classes.image_container}></div>
         </div>

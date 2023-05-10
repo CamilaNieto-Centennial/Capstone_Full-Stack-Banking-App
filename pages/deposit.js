@@ -70,6 +70,7 @@ export function Deposit() {
                     <Button variant="light" color="blue" fullWidth mt="md" radius="md">
                         Deposit
                     </Button>
+                    <br />
                 </Paper>
                 <div className={classes.image_container}></div>
             </div>

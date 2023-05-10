@@ -69,6 +69,7 @@ export function Withdraw() {
                     <Button variant="light" color="blue" fullWidth mt="md" radius="md">
                         Withdraw
                     </Button>
+                    <br />
                 </Paper>
                 <div className={classes.image_container}></div>
             </div>

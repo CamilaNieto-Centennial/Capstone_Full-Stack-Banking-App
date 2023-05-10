@@ -128,6 +128,7 @@ export function Login() {
                             <FacebookButton>Continue with Facebook</FacebookButton>
                         </Container>
                     </MantineProvider>
+                    <br />
                 </Paper>
                 <div className={classes.image_container}></div>
             </div>
