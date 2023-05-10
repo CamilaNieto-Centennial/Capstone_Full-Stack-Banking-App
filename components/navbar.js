@@ -122,7 +122,7 @@ export default function NavBar() {
                 onClose={closeDrawer}
                 size="100%"
                 padding="md"
-                title="Mantain"
+                title="Mantine"
                 className={classes.hiddenDesktop}
                 zIndex={1000000}
             >

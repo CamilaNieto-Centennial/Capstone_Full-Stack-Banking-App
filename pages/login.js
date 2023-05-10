@@ -36,8 +36,10 @@ const useStyles = createStyles((theme) => ({
         height: '100%',
         float: 'left',
         position: 'relative',
+        marginTop: '0em',
         [theme.fn.smallerThan('sm')]: {
             width: '100%',
+            marginBottom: '2em',
         },
     },
 
@@ -55,6 +57,11 @@ const useStyles = createStyles((theme) => ({
     title: {
         color: theme.colorScheme === 'dark' ? theme.white : theme.black,
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+
+        [theme.fn.smallerThan('sm')]: {
+            marginBottom: '14px',
+            marginTop: '14px',
+        },
     },
 }));
 
@@ -83,7 +90,7 @@ export function Login() {
             </Head>
             <div className={classes.full_container}>
                 <Paper className={classes.form_container} radius={0} p={30}>
-                    <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
+                    <Title order={2} className={classes.title} ta="center" mt="md" mb={25}>
                         Welcome back to Mantine!
                     </Title>
 
