@@ -44,7 +44,7 @@ const useStyles = createStyles((theme) => ({
         width: '27em',
 
         [theme.fn.smallerThan('xs')]: {
-            width: '20.5em',
+            width: '19em',
         },
     },
 
@@ -55,7 +55,7 @@ const useStyles = createStyles((theme) => ({
         lineHeight: 1.2,
 
         [theme.fn.smallerThan('xs')]: {
-            fontSize: '1em',
+            fontSize: '.9em',
         },
     },
 
@@ -66,7 +66,7 @@ const useStyles = createStyles((theme) => ({
         lineHeight: 1.2,
 
         [theme.fn.smallerThan('xs')]: {
-            fontSize: '1.05em',
+            fontSize: '.95em',
         },
     },
 
@@ -120,7 +120,7 @@ function AllData() {
             <Center className={classes.card_container} mx="auto" maw="40em">
                 <Card withBorder shadow="sm" radius="md" px="1em" py="0" className={classes.card}>
                     <Group noWrap spacing={0}>
-                        <Avatar size="8em" variant="filled" color="red.9" src={<User color='plain' />} radius="0" />
+                        <Avatar size="6em" variant="filled" color="red.9" src={<User color='plain' />} radius="0" />
                         <div className={classes.body}>
                             <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
                                 Name: <Text span className={classes.subtitle} color="black" fw={700}>Example</Text>
