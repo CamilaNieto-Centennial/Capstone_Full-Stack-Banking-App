@@ -1,7 +1,7 @@
 import Head from 'next/head';
 //import Image from 'next/image'
-import Layout, {siteTitle} from '../components/layout';
-import { Card, Table, BankForm} from '../components/context';
+import Layout, { siteTitle } from '../components/layout';
+import { Card, Table, BankForm } from '../components/context';
 import { UserContext, UserProvider } from '../components/userContext';
 import NavBar from '../components/navbar';
 import React from 'react'
@@ -14,14 +14,7 @@ import {
     createStyles,
     Paper,
     Button,
-    MantineProvider,
-    Container,
-    Group,
-    PaperProps,
-    Stack,
     TextInput,
-    PasswordInput,
-    Checkbox,
 } from '@mantine/core';
 
 const useStyles = createStyles((theme) => ({
@@ -39,18 +32,18 @@ const useStyles = createStyles((theme) => ({
         [theme.fn.smallerThan('sm')]: {
             width: '100%',
         },
-      },
-  
-      image_container: {
+    },
+
+    image_container: {
         width: '50%',
         height: '100%',
         float: 'left',
         background: 'linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url("/images/withdraw.jpg") center/cover no-repeat',
-        
+
         [theme.fn.smallerThan('sm')]: {
             display: 'none',
         },
-      },
+    },
 
     title: {
         color: theme.colorScheme === 'dark' ? theme.white : theme.black,
@@ -67,17 +60,17 @@ export function Withdraw() {
                 <title>{siteTitle}</title>
             </Head>
             <div className={classes.full_container}>
-            <Paper className={classes.form_container} radius={0} p={30}>
-            <Title order={2} className={classes.title} ta="center"  mb="xs">Withdraw</Title>
-                
-                <Title order={3} className={classes.title} mb="0">Guest</Title>
-                <Text mt=".2rem" weight={500}>Balance <Text span fw={700}>$ 0</Text></Text>
-                <TextInput label="Withdraw Amount" placeholder="$$$" size="md" mt=".8rem" />
-                <Button variant="light" color="blue" fullWidth mt="md" radius="md">
-                    Withdraw
-                </Button>
-            </Paper>
-            <div className={classes.image_container}></div>
+                <Paper className={classes.form_container} radius={0} p={30}>
+                    <Title order={2} className={classes.title} ta="center" mb="xs">Withdraw</Title>
+
+                    <Title order={3} className={classes.title} mb="0">Guest</Title>
+                    <Text mt=".2rem" weight={500}>Balance <Text span fw={700}>$ 0</Text></Text>
+                    <TextInput label="Withdraw Amount" placeholder="$$$" size="md" mt=".8rem" />
+                    <Button variant="light" color="blue" fullWidth mt="md" radius="md">
+                        Withdraw
+                    </Button>
+                </Paper>
+                <div className={classes.image_container}></div>
             </div>
         </Layout>
     );
@@ -146,13 +139,13 @@ function Withdraw(){
 */}
 
 /* Set the Global User Context to Withdraw Component */
-export default function WithdrawWithContext(){
+export default function WithdrawWithContext() {
     return (
-    <>
-      <NavBar />
-      <UserProvider>
-        <Withdraw />
-      </UserProvider>
-    </>
+        <>
+            <NavBar />
+            <UserProvider>
+                <Withdraw />
+            </UserProvider>
+        </>
     )
 }

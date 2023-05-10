@@ -1,7 +1,7 @@
 import Head from 'next/head';
-import Image from 'next/image'
+//import Image from 'next/image'
 import Layout, {siteTitle} from '../components/layout';
-import {Card, Table, BankForm} from '../components/context';
+import { Card, Table, BankForm} from '../components/context';
 import { UserContext, UserProvider } from '../components/userContext';
 import NavBar from '../components/navbar';
 import React from 'react'

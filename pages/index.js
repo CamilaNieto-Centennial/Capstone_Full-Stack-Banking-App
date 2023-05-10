@@ -1,7 +1,7 @@
 import Head from 'next/head';
 //import Image from 'next/image'
 import Layout, {siteTitle} from '../components/layout';
-import {Table, BankForm} from '../components/context';
+import { Table, BankForm} from '../components/context';
 import { UserContext, UserProvider } from '../components/userContext';
 import NavBar from '../components/navbar';
 import React from 'react'
@@ -13,17 +13,7 @@ import {
     rem,
     createStyles,
     Paper,
-    Button,
-    MantineProvider,
-    Container,
-    Group,
-    PaperProps,
-    Stack,
-    Card,
     Image,
-    TextInput,
-    PasswordInput,
-    Checkbox,
 } from '@mantine/core';
 
 const useStyles = createStyles((theme) => ({
@@ -32,8 +22,6 @@ const useStyles = createStyles((theme) => ({
         position: 'relative',
         background: 'linear-gradient(20deg, purple, darkslateblue);',
     },
-
-    
 
     form_container: {
       width: '50%',
