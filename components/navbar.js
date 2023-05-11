@@ -3,6 +3,7 @@ import {
     Header,
     Group,
     Button,
+    Image,
     Divider,
     Box,
     Burger,
@@ -10,7 +11,6 @@ import {
     ScrollArea,
     rem,
 } from '@mantine/core';
-import { MantineLogo } from '@mantine/ds';
 import { useDisclosure } from '@mantine/hooks';
 
 
@@ -87,7 +87,7 @@ export default function NavBar() {
         <Box pb={0}>
             <Header height={60} px="md">
                 <Group position="apart" sx={{ height: '100%' }}>
-                    <MantineLogo size={30} />
+                    <Image height={30} width="auto" src="/images/tranzzacto.png" alt="With default placeholder" withPlaceholder />
 
                     <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
                         <a href="/" className={classes.link}>
@@ -122,7 +122,7 @@ export default function NavBar() {
                 onClose={closeDrawer}
                 size="100%"
                 padding="md"
-                title="Mantine"
+                title="TRANZZACTO"
                 className={classes.hiddenDesktop}
                 zIndex={1000000}
             >

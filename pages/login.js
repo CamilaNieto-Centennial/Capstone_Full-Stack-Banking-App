@@ -91,7 +91,7 @@ export function Login() {
             <div className={classes.full_container}>
                 <Paper className={classes.form_container} radius={0} p={30}>
                     <Title order={2} className={classes.title} ta="center" mt="md" mb={25}>
-                        Welcome back to Mantine!
+                        Welcome back to Tranzzacto!
                     </Title>
 
                     <TextInput label="Email address" placeholder="hello@gmail.com" size="md" />

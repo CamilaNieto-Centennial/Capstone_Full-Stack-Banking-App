@@ -91,7 +91,7 @@ export function CreateAccount() {
             <div className={classes.full_container}>
                 <Paper className={classes.form_container} radius={0} p={30}>
                     <Title order={2} className={classes.title} ta="center" mt="md" mb={25}>
-                        Welcome to Mantine!
+                        Welcome to Tranzzacto!
                     </Title>
 
                     <TextInput label="Name" placeholder="Your name" size="md" />

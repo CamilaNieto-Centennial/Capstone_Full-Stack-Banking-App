@@ -61,7 +61,7 @@ export function Home() {
         </Head>
         <div className={classes.full_container}>
           <Paper className={classes.form_container} radius={0} p={30}>
-            <Title order={2} className={classes.title} ta="center"  mb="xs">Welcome to the Banking App Name!</Title>
+            <Title order={2} className={classes.title} ta="center"  mb="xs">Welcome to Tranzzacto Name!</Title>
             <Image
               src="/images/bank.png"
               height={240}
