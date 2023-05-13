@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start & node index.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -15,10 +15,16 @@
     "@mantine/ds": "^6.0.10",
     "@mantine/hooks": "^6.0.10",
     "@mantine/next": "^6.0.10",
+    "express": "^4.18.2",
+    "firebase": "^9.21.0",
+    "firebase-admin": "^11.8.0",
     "grommet-icons": "^4.10.0",
-    "next": "13.4.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "mongodb": "^5.5.0",
+    "mongoose": "^6.10.0",
+    "next": "^13.4.1",
+    "next-firebase-auth": "^1.0.0-canary.19",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.1"
   }
 }
