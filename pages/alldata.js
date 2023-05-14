@@ -4,8 +4,7 @@ import Layout, { siteTitle } from '../components/layout';
 import { BankForm } from '../components/context'; // Table
 import { UserContext, UserProvider } from '../components/userContext';
 import NavBar from '../components/navbar';
-import React from 'react'
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { User } from 'grommet-icons';
 
@@ -110,13 +109,21 @@ function AllData() {
 
     const { classes, cx } = useStyles();
     const [scrolled, setScrolled] = useState(false);
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        fetch('/api/users')
+            .then(response => response.json())
+            .then(data => setData(data))
+            .catch(error => console.error(error));
+    }, []);
 
     return (
         <Layout>
             <Head>
                 <title>{siteTitle}</title>
             </Head>
-            
+
             <Center className={classes.card_container} mx="auto" maw="40em">
                 <Card withBorder shadow="sm" radius="md" px="1em" py="0" className={classes.card}>
                     <Group noWrap spacing={0}>
@@ -141,72 +148,26 @@ function AllData() {
                     All Data
                 </Title>
                 <ScrollArea className={classes.table} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
-                <Table highlightOnHover striped>
-                    <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Password</th>
-                        <th>Balance</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr key="example1">
-                            <td>Example</td>
-                            <td>example@gmail.com</td>
-                            <td>1234</td>
-                            <td>1500</td>
-                        </tr>
-                        <tr key="example2">
-                            <td>Example</td>
-                            <td>example@gmail.com</td>
-                            <td>1234</td>
-                            <td>1500</td>
-                        </tr>
-                        <tr key="example3">
-                            <td>Example</td>
-                            <td>example@gmail.com</td>
-                            <td>1234</td>
-                            <td>1500</td>
-                        </tr>
-                        <tr key="example4">
-                            <td>Example</td>
-                            <td>example@gmail.com</td>
-                            <td>1234</td>
-                            <td>1500</td>
-                        </tr>
-                        <tr key="example5">
-                            <td>Example</td>
-                            <td>example@gmail.com</td>
-                            <td>1234</td>
-                            <td>1500</td>
-                        </tr>
-                        <tr key="example6">
-                            <td>Example</td>
-                            <td>example@gmail.com</td>
-                            <td>1234</td>
-                            <td>1500</td>
-                        </tr>
-                        <tr key="example7">
-                            <td>Example</td>
-                            <td>example@gmail.com</td>
-                            <td>1234</td>
-                            <td>1500</td>
-                        </tr>
-                        <tr key="example8">
-                            <td>Example</td>
-                            <td>example@gmail.com</td>
-                            <td>1234</td>
-                            <td>1500</td>
-                        </tr>
-                        <tr key="example9">
-                            <td>Example</td>
-                            <td>example@gmail.com</td>
-                            <td>1234</td>
-                            <td>1500</td>
-                        </tr>
-                    </tbody>
-                </Table>
+                    <Table highlightOnHover striped>
+                        <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Password</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.map(user => (
+                                <tr key={user.id}>
+                                    <td>{user.name}</td>
+                                    <td>{user.email}</td>
+                                    <td>{user.password}</td>
+                                    <td>$ {user.balance}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
                 </ScrollArea>
             </Container>
         </Layout>
