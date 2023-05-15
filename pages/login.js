@@ -145,15 +145,15 @@ export function Login() {
         try {
             // Sign in the user with email and password
             await auth.signInWithEmailAndPassword(email, password);
-            // Wait for 3 seconds before redirecting to the Home Page
+            // Wait for 4 seconds before redirecting to the Home Page
             setTimeout(() => {
                 router.push('/');
-            }, 3000);
+            }, 4000);
             setTitle("You did great")
             setMsg("Successful Login");
             setColor("green");
             setIcon(<IconCheck />);
-            setClose(3000);
+            setClose(4000);
         } catch (error) {
             console.log(error.message);
             const errorMessage = error.message;

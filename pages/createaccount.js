@@ -92,6 +92,7 @@ export function CreateAccount() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [balance, setBalance] = useState(0);
     const [title, setTitle] = useState('');
     const [msg, setMsg] = useState('');
     const [color, setColor] = useState('');
@@ -150,7 +151,7 @@ export function CreateAccount() {
         try {
             // Create the user with email and password
             await auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
+                .then(async (userCredential) => {
                     // Save the user's name to Firebase Authentication
                     userCredential.user.updateProfile({
                         displayName: name,
@@ -161,15 +162,33 @@ export function CreateAccount() {
                         console.error("Error saving user's name: ", error);
                     });
 
-                    // Wait for 3 seconds before redirecting to the Home Page
-                    setTimeout(() => {
-                        router.push('/');
-                    }, 3000);
-                    setTitle("You did great")
-                    setMsg("Successful Sign Up");
-                    setColor("green");
-                    setIcon(<IconCheck />);
-                    setClose(3000);
+                    // Make a POST request to create a new user in the database
+                    const response = await fetch('/api/create-user', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name,
+                            email,
+                            password,
+                            balance
+                        }),
+                    });
+
+                    if (response.ok) {
+                        // Wait for 4 seconds before redirecting to the Home Page
+                        setTimeout(() => {
+                            router.push('/');
+                        }, 4000);
+                        setTitle("You did great")
+                        setMsg("Successful Sign Up");
+                        setColor("green");
+                        setIcon(<IconCheck />);
+                        setClose(4000);
+                    } else {
+                        throw new Error('Failed to create user');
+                    }
                 })
                 .catch((error) => {
                     //console.error("Error creating user: ", error);
