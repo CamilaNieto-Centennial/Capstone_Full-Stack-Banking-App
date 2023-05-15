@@ -6,6 +6,7 @@ import NavBar from '../components/navbar';
 import React, { useState, useEffect } from 'react';
 import { auth } from '../lib/initAuth';
 import { useRouter } from 'next/router';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 import {
     Title,
@@ -114,7 +115,7 @@ export function Login() {
             setClose(3000);
             return;
         }
-    
+
         if (!validateEmail(email)) {
             setTitle("")
             setMsg('Please enter a valid email address');
@@ -123,7 +124,7 @@ export function Login() {
             setClose(3000);
             return;
         }
-    
+
         if (password.trim() === '') {
             setTitle("")
             setMsg('Please enter your password');
@@ -132,7 +133,7 @@ export function Login() {
             setClose(3000);
             return;
         }
-    
+
         if (password.length < 8) {
             setTitle("")
             setMsg('Password should be at least 8 characters long');
@@ -145,15 +146,15 @@ export function Login() {
         try {
             // Sign in the user with email and password
             await auth.signInWithEmailAndPassword(email, password);
-            // Wait for 4 seconds before redirecting to the Home Page
+            // Wait for 3 seconds before redirecting to the Home Page
             setTimeout(() => {
                 router.push('/');
-            }, 4000);
+            }, 3000);
             setTitle("You did great")
             setMsg("Successful Login");
             setColor("green");
             setIcon(<IconCheck />);
-            setClose(4000);
+            setClose(3000);
         } catch (error) {
             console.log(error.message);
             const errorMessage = error.message;
@@ -166,6 +167,45 @@ export function Login() {
             setTitle("Oops!")
             setMsg(extractedMessage);
             setColor("red");
+            setIcon(<IconX />);
+            setClose(9000);
+        }
+    };
+
+    const handleGoogleLogin = async () => {
+        const auth = getAuth();
+        const provider = new GoogleAuthProvider();
+        try {
+            // Create a Google provider instance
+            //const provider = new firebase.auth.GoogleAuthProvider();
+            // Sign in with Google pop-up
+            const result = await signInWithPopup(auth, provider);
+
+            // Access user information from the result
+            const { displayName, email } = result.user;
+            // You can access the user's name and email here
+
+            // Wait for 3 seconds before redirecting to the Home Page
+            setTimeout(() => {
+                router.push('/');
+            }, 3000);
+            setTitle('You did great');
+            setMsg('Successful Login');
+            setColor('green');
+            setIcon(<IconCheck />);
+            setClose(3000);
+        } catch (error) {
+            console.log(error.message);
+            const errorMessage = error.message;
+            // Define a regular expression pattern to match the desired portion of the error message
+            //const pattern = /Firebase: (.*?)(\s*\(.+\))?$/;
+            // Use the match() method with the pattern to extract the desired portion
+            //const matches = pattern.exec(errorMessage);
+            //const extractedMessage = matches[1];
+
+            setTitle('Oops!');
+            setMsg(errorMessage);
+            setColor('red');
             setIcon(<IconX />);
             setClose(9000);
         }
@@ -221,7 +261,7 @@ export function Login() {
                         }}
                     >
                         <Container size="xs">
-                            <GoogleButton mb={10}>Continue with Google</GoogleButton>
+                            <GoogleButton mb={10} onClick={handleGoogleLogin}>Continue with Google</GoogleButton>
                             {/*<FacebookButton>Continue with Facebook</FacebookButton>*/}
                         </Container>
                     </MantineProvider>
