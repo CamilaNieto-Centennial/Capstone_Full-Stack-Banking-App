@@ -3,6 +3,8 @@ import {
     Header,
     Group,
     Button,
+    Text,
+    Avatar,
     Image,
     Divider,
     Box,
@@ -12,6 +14,8 @@ import {
     rem,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import React, { useState, useEffect } from 'react';
+import { auth } from '../lib/initAuth';
 
 
 
@@ -83,6 +87,23 @@ export default function NavBar() {
     const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
     const { classes, theme } = useStyles();
 
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((authUser) => {
+            if (authUser) {
+                // User is signed in
+                setUser(authUser);
+            } else {
+                // User is signed out
+                setUser(null);
+            }
+        });
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
     return (
         <Box pb={0}>
             <Header height={60} px="md">
@@ -104,15 +125,28 @@ export default function NavBar() {
                         </a>
                     </Group>
 
-                    <Group className={classes.hiddenMobile}>
-                        <Button variant="default">
-                            <a href="/login">Login</a>
-                        </Button>
-                        <Button>
-                            <a href="/createaccount">Sign up</a>
-                        </Button>
-                    </Group>
-
+                    {user ? (
+                        <Group spacing="1.5rem" className={classes.hiddenMobile}>
+                            <Group spacing=".5rem">
+                                <Avatar radius="xl" color="red" />
+                                <Text fw={700}>
+                                    {user.displayName}
+                                </Text>
+                            </Group>
+                            <Button onClick={() => auth.signOut()}>
+                                <a href="">Logout</a>
+                            </Button>
+                        </Group>
+                    ) : (
+                        <Group className={classes.hiddenMobile}>
+                            <Button variant="default">
+                                <a href="/login">Login</a>
+                            </Button>
+                            <Button>
+                                <a href="/createaccount">Sign up</a>
+                            </Button>
+                        </Group>
+                    )}
                     <Burger opened={drawerOpened} onClick={toggleDrawer} className={classes.hiddenDesktop} />
                 </Group>
             </Header>
@@ -127,23 +161,36 @@ export default function NavBar() {
                 zIndex={1000000}
             >
                 {/*<ScrollArea h={`calc(100vh - ${rem(60)})`} mx="-md">*/}
-                    <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
+                <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
-                    <a href="/" className={classes.link}>
-                        Home
-                    </a>
-                    <a href="/deposit" className={classes.link}>
-                        Deposit
-                    </a>
-                    <a href="/withdraw" className={classes.link}>
-                        Withdraw
-                    </a>
-                    <a href="/alldata" className={classes.link}>
-                        All Data
-                    </a>
+                <a href="/" className={classes.link}>
+                    Home
+                </a>
+                <a href="/deposit" className={classes.link}>
+                    Deposit
+                </a>
+                <a href="/withdraw" className={classes.link}>
+                    Withdraw
+                </a>
+                <a href="/alldata" className={classes.link}>
+                    All Data
+                </a>
 
-                    <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
+                <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
+                {user ? (
+                    <Group position="center" grow pb="xl" px="md">
+                        <Group spacing=".5rem">
+                            <Avatar radius="xl" color="red" />
+                            <Text fw={700}>
+                                {user.displayName}
+                            </Text>
+                        </Group>
+                        <Button onClick={() => auth.signOut()}>
+                            <a href="">Logout</a>
+                        </Button>
+                    </Group>
+                ) : (
                     <Group position="center" grow pb="xl" px="md">
                         <Button variant="default">
                             <a href="/login">Login</a>
@@ -152,6 +199,7 @@ export default function NavBar() {
                             <a href="/createaccount">Sign up</a>
                         </Button>
                     </Group>
+                )}
                 {/*</ScrollArea>*/}
             </Drawer>
         </Box>

@@ -1,10 +1,11 @@
 import Head from 'next/head';
 //import Image from 'next/image'
 import Layout, { siteTitle } from '../components/layout';
-import { Card, Table, BankForm } from '../components/context';
 import { UserContext, UserProvider } from '../components/userContext';
 import NavBar from '../components/navbar';
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { auth } from '../lib/initAuth';
+import { useRouter } from 'next/router';
 
 import {
     Title,
@@ -19,7 +20,10 @@ import {
     TextInput,
     PasswordInput,
     Checkbox,
+    useMantineTheme,
 } from '@mantine/core';
+import { notifications, Notifications } from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons-react';
 
 import { Google } from 'grommet-icons';
 import { Facebook } from 'grommet-icons';
@@ -48,7 +52,7 @@ const useStyles = createStyles((theme) => ({
         height: '100%',
         float: 'left',
         background: 'linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url("/images/form1.jpg") center/cover no-repeat',
-        
+
         [theme.fn.smallerThan('sm')]: {
             display: 'none',
         },
@@ -82,9 +86,102 @@ export function FacebookButton(props) {
 
 export function Login() {
     const { classes } = useStyles();
+    const theme = useMantineTheme();
+
+    const router = useRouter();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [title, setTitle] = useState('');
+    const [msg, setMsg] = useState('');
+    const [color, setColor] = useState('');
+    const [icon, setIcon] = useState('');
+    const [close, setClose] = useState('');
+
+    const validateEmail = (email) => {
+        // Regular expression for email validation
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return pattern.test(email);
+    };
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        if (email.trim() === '') {
+            setTitle("")
+            setMsg('Please enter your email');
+            setColor('red');
+            setIcon(<IconX />);
+            setClose(3000);
+            return;
+        }
+    
+        if (!validateEmail(email)) {
+            setTitle("")
+            setMsg('Please enter a valid email address');
+            setColor('red');
+            setIcon(<IconX />);
+            setClose(3000);
+            return;
+        }
+    
+        if (password.trim() === '') {
+            setTitle("")
+            setMsg('Please enter your password');
+            setColor('red');
+            setIcon(<IconX />);
+            setClose(3000);
+            return;
+        }
+    
+        if (password.length < 8) {
+            setTitle("")
+            setMsg('Password should be at least 8 characters long');
+            setColor('red');
+            setIcon(<IconX />);
+            setClose(3000);
+            return;
+        }
+
+        try {
+            // Sign in the user with email and password
+            await auth.signInWithEmailAndPassword(email, password);
+            // Wait for 3 seconds before redirecting to the Home Page
+            setTimeout(() => {
+                router.push('/');
+            }, 3000);
+            setTitle("You did great")
+            setMsg("Successful Login");
+            setColor("green");
+            setIcon(<IconCheck />);
+            setClose(3000);
+        } catch (error) {
+            console.log(error.message);
+            const errorMessage = error.message;
+            // Define a regular expression pattern to match the desired portion of the error message
+            const pattern = /Firebase: (.*?)(\s*\(.+\))?$/;
+            // Use the match() method with the pattern to extract the desired portion
+            const matches = pattern.exec(errorMessage);
+            const extractedMessage = matches[1];
+
+            setTitle("Oops!")
+            setMsg(extractedMessage);
+            setColor("red");
+            setIcon(<IconX />);
+            setClose(9000);
+        }
+    };
+
+    useEffect(() => {
+        if (msg) {
+            notifications.show({ title: title, message: msg, color: color, icon: icon, autoClose: close });
+        }
+    }, [msg]);
 
     return (
         <Layout>
+            <MantineProvider withNormalizeCSS withGlobalStyles>
+                <Notifications />
+            </MantineProvider>
             <Head>
                 <title>{siteTitle}</title>
             </Head>
@@ -94,10 +191,10 @@ export function Login() {
                         Welcome back to Tranzzacto!
                     </Title>
 
-                    <TextInput label="Email address" placeholder="hello@gmail.com" size="md" />
-                    <PasswordInput label="Password" placeholder="Your password" mt="md" size="md" />
+                    <TextInput label="Email address" placeholder="hello@gmail.com" size="md" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <PasswordInput label="Password" placeholder="Your password" mt="md" size="md" value={password} onChange={(e) => setPassword(e.target.value)} />
                     {/*<Checkbox label="Keep me logged in" mt="xl" size="md" />*/}
-                    <Button fullWidth mt="xl" size="md">
+                    <Button fullWidth mt="xl" size="md" onClick={handleLogin}>
                         Login
                     </Button>
 
@@ -113,19 +210,19 @@ export function Login() {
                     <MantineProvider
                         theme={{
                             components: {
-                            Container: {
-                                defaultProps: {
-                                sizes: {
-                                    xs: 380
+                                Container: {
+                                    defaultProps: {
+                                        sizes: {
+                                            xs: 380
+                                        },
+                                    },
                                 },
-                                },
-                            },
                             },
                         }}
-                        >
-                        <Container size="xs"> 
+                    >
+                        <Container size="xs">
                             <GoogleButton mb={10}>Continue with Google</GoogleButton>
-                            <FacebookButton>Continue with Facebook</FacebookButton>
+                            {/*<FacebookButton>Continue with Facebook</FacebookButton>*/}
                         </Container>
                     </MantineProvider>
                     <br />
@@ -135,65 +232,6 @@ export function Login() {
         </Layout>
     );
 }
-
-{/*
-function Login(){
-    const ctx = React.useContext(UserContext)
-    let current_user = Object.values(ctx.current_user);
-    const [showP, setShowP] = React.useState(true);
-    const [statusP, setStatusP] = React.useState('');
-
-    const chooseShowP = (showP) => {
-        setShowP(showP);
-    };
-    const chooseStatusP = (statusP) => {
-        setStatusP(statusP);
-    };
-
-    return(
-        <Layout>
-            <Head>
-                <title>{siteTitle}</title>
-            </Head>
-            <div className="container-big">
-                <div className="container-left">
-                    <div className="row subcontainer" id="subcontainer02">
-                        <div className="col col-8 col-sm-7 col-md-6 col-lg-7 col-xl-6 my-auto mx-auto">
-                            <Card
-                                bgcolor="light"
-                                txtcolor="black"
-                                header="Login"
-                                headercolor = "#ffffff"
-                                headerBackground = "#6c584c"
-                                body={showP
-                                    ? (
-                                        <BankForm
-                                            chooseStatusP={chooseStatusP}
-                                            statusP={statusP}
-                                            email="email"
-                                            password="password"
-                                            buttonLogin="Login"
-                                            chooseShowP={chooseShowP}
-                                        />
-                                    )
-                                    :(
-                                        <BankForm
-                                            message={`Successfully Login as ${current_user[0]}`}
-                                            chooseShowP={chooseShowP}
-                                        />
-                                    )
-                                }
-                            >
-                            </Card>
-                        </div>
-                    </div>
-                </div>
-                <div className="container-right" id="container-right02"></div>
-            </div>
-        </Layout>
-    )
-}
-*/}
 
 /* Set the Global User Context to Login Component */
 export default function LoginWithContext() {
