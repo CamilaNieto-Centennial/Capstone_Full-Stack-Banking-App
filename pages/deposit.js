@@ -140,7 +140,7 @@ export function Deposit() {
 
         try {
             // Calculate the new balance
-            const updatedBalance = (Number(balance) - parsedAmount).toFixed(2);
+            const updatedBalance = (Number(balance) + parsedAmount).toFixed(2);
 
             const response = await fetch(`/api/update-user/${id}`, {
                 method: 'PUT',
