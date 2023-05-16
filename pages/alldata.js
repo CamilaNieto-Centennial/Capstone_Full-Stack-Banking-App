@@ -4,7 +4,7 @@ import Layout, { siteTitle } from '../components/layout';
 import { BankForm } from '../components/context'; // Table
 import { UserContext, UserProvider } from '../components/userContext';
 import NavBar from '../components/navbar';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { auth } from '../lib/initAuth';
 
 import { User } from 'grommet-icons';
@@ -21,7 +21,7 @@ import {
     Card,
     Avatar,
     Table,
-    ScrollArea
+    ScrollArea,
 } from '@mantine/core';
 
 const useStyles = createStyles((theme) => ({
@@ -112,6 +112,9 @@ function AllData() {
     const [scrolled, setScrolled] = useState(false);
     const [data, setData] = useState([]);
     const [user, setUser] = useState(null);
+    const [userName, setUserName] = useState('');
+    const [balance, setBalance] = useState(0);
+    const { userEmail } = useContext(UserContext);
 
     useEffect(() => {
         fetch('/api/users')
@@ -119,6 +122,28 @@ function AllData() {
             .then(data => setData(data))
             .catch(error => console.error(error));
     }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                console.log('User Email: ' + userEmail);
+                if (userEmail) { // Only fetch data if userEmail is not empty
+                    const response = await fetch(
+                        `/api/get-user-by-email?email=${userEmail}`
+                    );
+                    if (response.ok) {
+                        const user = await response.json();
+                        setUserName(user.name);
+                        setBalance(user.balance);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchData();
+    }, [userEmail]);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((authUser) => {
@@ -148,13 +173,13 @@ function AllData() {
                                 <Avatar size="6em" variant="filled" color="red.9" src={<User color='plain' />} radius="0" />
                                 <div className={classes.body}>
                                     <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
-                                        Name: <Text span className={classes.subtitle} color="black" fw={700}>Example</Text>
+                                        Name: <Text span className={classes.subtitle} color="black" fw={700}>{userName || 'Guest'}</Text>
                                     </Text>
                                     <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
-                                        Email: <Text span className={classes.subtitle} color="black" fw={700}>example@gmail.com</Text>
+                                        Email: <Text span className={classes.subtitle} color="black" fw={700}>{userEmail || 'guest@gmail.com'}</Text>
                                     </Text>
                                     <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
-                                        Balance: <Text span className={classes.subtitle} color="black" weight={700}>$100</Text>
+                                        Balance: <Text span className={classes.subtitle} color="black" weight={700}>${balance !== null ? balance : '-'}</Text>
                                     </Text>
                                 </div>
                             </Group>
@@ -206,72 +231,12 @@ function AllData() {
     );
 }
 
-{/*
-function AllData() {
-    const ctx = React.useContext(UserContext)
-    let current_user = ctx.current_user;
-
-    return (
-        <Layout>
-            <Head>
-                <title>{siteTitle}</title>
-            </Head>
-            <div style={{margin: "2em"}}>
-                <div className="row d-flex justify-content-center">
-                    <div className="col-md-9 col-lg-8 col-xl-6 my-3" style={{border: "#3f3f3f  5px solid"}}>
-                        <div className="row">
-                            <div className="col-sm-5 bg-danger rounded-left">
-                                <div className="card-block text-center text-white">
-                                    <i className="fas fa-user-tie fa-7x mt-4"></i>
-                                    <h1 className="font-weight-bold mt-4">{current_user[0]}</h1>
-                                </div>
-                            </div>
-                            <div className="col-sm-7 bg-white rounded-right">
-                                <h2 className="mt-3 text-center">Your Information</h2>
-                                <hr className="mainHr"/>
-                                <div className="row">
-                                    <div className="col-sm-12">
-                                        <h5><strong>Name: </strong>{current_user[0]}</h5>
-                                    </div>
-                                    <div className="col-sm-12">
-                                        <h5><strong>Email: </strong>{current_user[2]}</h5>
-                                    </div>
-                                    <div className="col-sm-12">
-                                        <h5><strong>Balance: </strong>${current_user[1]}</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <hr />
-                <h1>All Data</h1>
-                <Table
-                    tableColor = "" //dark
-                    striped = "striped"
-                    responsive = "responsive"
-                    titles = {["Name", "Email", "Password", "Balance"]}
-                />
-                
-                //<h5>{JSON.stringify(ctx)}</h5>
-                //<br />
-                //<h4><strong>Guest</strong> user will NOT make part of Users table. <strong>Guest</strong> only exists for testing purposes...</h4>
-                
-            </div>
-        </Layout>
-    )
-}
-*/}
-
 /* Set the Global User Context to AllData Component */
 export default function AllDataWithContext() {
     return (
-        <>
+        <UserProvider>
             <NavBar />
-            <UserProvider>
-                <AllData />
-            </UserProvider>
-        </>
+            <AllData />
+        </UserProvider>
     )
 }

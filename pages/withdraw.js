@@ -4,7 +4,7 @@ import Layout, { siteTitle } from '../components/layout';
 import { Card, Table, BankForm } from '../components/context';
 import { UserContext, UserProvider } from '../components/userContext';
 import NavBar from '../components/navbar';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { auth } from '../lib/initAuth';
 
 import {
@@ -16,7 +16,10 @@ import {
     Paper,
     Button,
     TextInput,
+    MantineProvider
 } from '@mantine/core';
+import { notifications, Notifications } from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons-react';
 
 const useStyles = createStyles((theme) => ({
     full_container: {
@@ -56,6 +59,16 @@ export function Withdraw() {
     const { classes } = useStyles();
 
     const [user, setUser] = useState(null);
+    const [userName, setUserName] = useState('');
+    const [balance, setBalance] = useState(0);
+    const [id, setId] = useState('');
+    const [withdrawAmount, setWithdrawAmount] = useState(''); // New state for the deposit amount
+    const { userEmail } = useContext(UserContext);
+    const [title, setTitle] = useState('');
+    const [msg, setMsg] = useState('');
+    const [color, setColor] = useState('');
+    const [icon, setIcon] = useState('');
+    const [close, setClose] = useState('');
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((authUser) => {
@@ -72,8 +85,111 @@ export function Withdraw() {
         };
     }, []);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                console.log('User Email: ' + userEmail);
+                if (userEmail) { // Only fetch data if userEmail is not empty
+                    const response = await fetch(
+                        `/api/get-user-by-email?email=${userEmail}`
+                    );
+                    if (response.ok) {
+                        const user = await response.json();
+                        setUserName(user.name);
+                        setBalance(user.balance);
+                        setId(user._id);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchData();
+    }, [userEmail]);
+
+    const handleWithdraw = async () => {
+
+        if (withdrawAmount.trim() === '') {
+            setMsg('Please enter your withdraw amount');
+            setColor('red');
+            setIcon(<IconX />);
+            setClose(4000);
+            return;
+        }
+
+        const parsedAmount = Number(withdrawAmount);
+
+        if (isNaN(parsedAmount)) {
+            setMsg('Withdraw must be a number');
+            setColor('red');
+            setIcon(<IconX />);
+            setClose(4000);
+            return;
+        }
+
+        if (parsedAmount <= 0) {
+            setMsg('Withdraw must be positive');
+            setColor('red');
+            setIcon(<IconX />);
+            setClose(4000);
+            return;
+        }
+
+        if (parsedAmount > balance) {
+            setMsg(`Withdraw must be less than or equal to $${balance}`);
+            setColor('red');
+            setIcon(<IconX />);
+            setClose(6000);
+            return;
+        }
+
+        try {
+            // Calculate the new balance
+            const updatedBalance = (Number(balance) - parsedAmount).toFixed(2);
+
+            const response = await fetch(`/api/update-user/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    balance: updatedBalance,
+                }),
+            });
+
+            if (response.ok) {
+                setMsg("Successful Withdraw");
+                setColor("green");
+                setIcon(<IconCheck />);
+                setClose(3000);
+                // Update the local state with the new balance
+                setBalance(updatedBalance);
+            } else {
+                console.error('Error updating user:', response.status);
+            }
+        } catch (error) {
+            console.error('Error updating user:', error);
+            const errorMessage = error.message;
+            setTitle("Oops!");
+            setMsg(errorMessage);
+            setColor("red");
+            setIcon(<IconX />);
+            setClose(9000);
+        }
+    };
+
+    useEffect(() => {
+        if (msg) {
+            notifications.show({ title: title, message: msg, color: color, icon: icon, autoClose: close });
+        }
+    }, [msg]);
+
     return (
         <Layout>
+            <MantineProvider withNormalizeCSS withGlobalStyles>
+                <Notifications />
+            </MantineProvider>
             <Head>
                 <title>{siteTitle}</title>
             </Head>
@@ -82,10 +198,10 @@ export function Withdraw() {
                     <Paper className={classes.form_container} radius={0} p={30}>
                         <Title order={2} className={classes.title} ta="center" mb="xs">Withdraw</Title>
 
-                        <Title order={3} className={classes.title} mb="0">Guest</Title>
-                        <Text mt=".2rem" weight={500}>Balance <Text span fw={700}>$ 0</Text></Text>
-                        <TextInput label="Withdraw Amount" placeholder="$$$" size="md" mt=".8rem" />
-                        <Button variant="light" color="blue" fullWidth mt="md" radius="md">
+                        <Title order={3} className={classes.title} mb="0">{userName || 'Guest'}</Title>
+                        <Text mt=".2rem" weight={500}>Balance <Text span fw={700}>$ {balance !== null ? balance : '-'}</Text></Text>
+                        <TextInput label="Withdraw Amount" placeholder="$$$" size="md" mt=".8rem" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} />
+                        <Button variant="light" color="blue" fullWidth mt="md" radius="md" onClick={handleWithdraw} >
                             Withdraw
                         </Button>
                         <br />
@@ -117,76 +233,12 @@ export function Withdraw() {
     );
 }
 
-{/*
-function Withdraw(){
-    const ctx = React.useContext(UserContext)
-    let current_user = ctx.current_user;
-
-    const [showP, setShowP] = React.useState(true);
-    const [statusP, setStatusP] = React.useState('');
-
-    const chooseShowP = (showP) => {
-        setShowP(showP);
-    };
-    const chooseStatusP = (statusP) => {
-        setStatusP(statusP);
-    };
-    
-    return(
-        <Layout>
-            <Head>
-                <title>{siteTitle}</title>
-            </Head>
-            <div className="container-big">
-                <div className="container-left">
-                    <div className="row subcontainer" id="subcontainer04">
-                        <div className="col col-8 col-sm-7 col-md-6 col-lg-7 col-xl-6 my-auto mx-auto">
-                            <Card
-                                bgcolor="light"
-                                txtcolor="black"
-                                header="Withdraw"
-                                headercolor = "#ffffff"
-                                headerBackground = "#184e77"
-                                title={`${current_user[0]}`}
-                                body={showP
-                                    ? (
-                                        <BankForm
-                                            chooseStatusP={chooseStatusP}
-                                            statusP={statusP}
-                                            balance={`$ ${current_user[1]}`}
-                                            withdraw="withdraw"
-                                            buttonWithdraw="Withdraw"
-                                            chooseShowP={chooseShowP}
-                                        />
-                                    )
-                                    :(
-                                        <BankForm
-                                            message="Successfully Withdraw"
-                                            buttonAddW="Add another Withdraw"
-                                            chooseShowP={chooseShowP}
-                                        />
-                                    )
-                                }
-                            >
-                            </Card>
-                        </div>
-                    </div>
-                </div>
-                <div className="container-right" id="container-right04"></div>
-            </div>
-        </Layout>
-    )
-}
-*/}
-
 /* Set the Global User Context to Withdraw Component */
 export default function WithdrawWithContext() {
     return (
-        <>
+        <UserProvider>
             <NavBar />
-            <UserProvider>
-                <Withdraw />
-            </UserProvider>
-        </>
+            <Withdraw />
+        </UserProvider>
     )
 }

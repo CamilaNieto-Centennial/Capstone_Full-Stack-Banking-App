@@ -324,12 +324,10 @@ export function CreateAccount() {
 /* Set the Global User Context to CreateAccount Component */
 export default function CreateAccountWithContext() {
     return (
-        <>
+        <UserProvider>
             <NavBar />
-            <UserProvider>
-                <CreateAccount />
-            </UserProvider>
-        </>
+            <CreateAccount />
+        </UserProvider>
     )
 }
 

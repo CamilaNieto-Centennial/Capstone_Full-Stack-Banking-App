@@ -124,11 +124,9 @@ export function Home() {
 /* Set the Global User Context to Home Component */
 export default function HomeWithContext() {
   return (
-    <>
-      <NavBar />
-      <UserProvider>
+    <UserProvider>
+        <NavBar />
         <Home />
-      </UserProvider>
-    </>
+    </UserProvider>
   )
 }

@@ -14,9 +14,9 @@ import {
     rem,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext, UserProvider } from '../components/userContext';
 import { auth } from '../lib/initAuth';
-
 
 
 const useStyles = createStyles((theme) => ({
@@ -88,21 +88,24 @@ export default function NavBar() {
     const { classes, theme } = useStyles();
 
     const [user, setUser] = useState(null);
+    const { userEmail, updateUserEmail } = useContext(UserContext);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((authUser) => {
             if (authUser) {
                 // User is signed in
                 setUser(authUser);
+                updateUserEmail(authUser.email); // Set the userEmail value here
             } else {
                 // User is signed out
                 setUser(null);
+                updateUserEmail(''); // Reset the userEmail value when user signs out
             }
         });
         return () => {
             unsubscribe();
         };
-    }, []);
+    }, []); // Empty dependency array to run the effect only once
 
     return (
         <Box pb={0}>
@@ -129,7 +132,6 @@ export default function NavBar() {
                         <Group spacing="1.5rem" className={classes.hiddenMobile}>
                             <Group spacing=".5rem">
                                 <Avatar radius="xl" color="red" />
-                                <div style={{display:'none'}}>{user.email}</div>
                                 <Text fw={700}>
                                     {user.displayName}
                                 </Text>
@@ -183,7 +185,6 @@ export default function NavBar() {
                     <Group position="center" grow pb="xl" px="md">
                         <Group spacing=".5rem">
                             <Avatar radius="xl" color="red" />
-                            <div style={{display:'none'}}>{user.email}</div>
                             <Text fw={700}>
                                 {user.displayName}
                             </Text>

@@ -276,11 +276,9 @@ export function Login() {
 /* Set the Global User Context to Login Component */
 export default function LoginWithContext() {
     return (
-        <>
+        <UserProvider>
             <NavBar />
-            <UserProvider>
-                <Login />
-            </UserProvider>
-        </>
+            <Login />
+        </UserProvider>
     )
 }

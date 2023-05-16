@@ -1,13 +1,19 @@
-import React from 'react'
+import React, { createContext, useState } from 'react'
 
 // Declaring UserContext to undefined
-export const UserContext = React.createContext(undefined)
+export const UserContext = createContext("")
 
 // Declaring Default users and Current User Function
 export function UserProvider({ children }) {
+	const [userEmail, setUserEmail] = useState("");
+
+	const updateUserEmail = (email) => {
+		setUserEmail(email);
+	};
+
 	return (
-		<UserContext.Provider value={{users:[{name:"Kmi", email:"kmi@gmail.com", password:"1234", balance:100}], current_user:["Guest", 0, "email"]}}>
-			{ children }
+		<UserContext.Provider value={{ userEmail, updateUserEmail }}>
+			{children}
 		</UserContext.Provider>
 	)
 }
