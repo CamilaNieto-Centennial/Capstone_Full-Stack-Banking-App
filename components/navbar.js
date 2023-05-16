@@ -129,6 +129,7 @@ export default function NavBar() {
                         <Group spacing="1.5rem" className={classes.hiddenMobile}>
                             <Group spacing=".5rem">
                                 <Avatar radius="xl" color="red" />
+                                <div style={{display:'none'}}>{user.email}</div>
                                 <Text fw={700}>
                                     {user.displayName}
                                 </Text>
@@ -182,6 +183,7 @@ export default function NavBar() {
                     <Group position="center" grow pb="xl" px="md">
                         <Group spacing=".5rem">
                             <Avatar radius="xl" color="red" />
+                            <div style={{display:'none'}}>{user.email}</div>
                             <Text fw={700}>
                                 {user.displayName}
                             </Text>
