@@ -5,6 +5,7 @@ import { BankForm } from '../components/context'; // Table
 import { UserContext, UserProvider } from '../components/userContext';
 import NavBar from '../components/navbar';
 import React, { useState, useEffect } from 'react';
+import { auth } from '../lib/initAuth';
 
 import { User } from 'grommet-icons';
 
@@ -20,7 +21,7 @@ import {
     Card,
     Avatar,
     Table,
-    ScrollArea,
+    ScrollArea
 } from '@mantine/core';
 
 const useStyles = createStyles((theme) => ({
@@ -110,6 +111,7 @@ function AllData() {
     const { classes, cx } = useStyles();
     const [scrolled, setScrolled] = useState(false);
     const [data, setData] = useState([]);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         fetch('/api/users')
@@ -118,58 +120,88 @@ function AllData() {
             .catch(error => console.error(error));
     }, []);
 
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((authUser) => {
+            if (authUser) {
+                // User is signed in
+                setUser(authUser);
+            } else {
+                // User is signed out
+                setUser(null);
+            }
+        });
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
     return (
         <Layout>
             <Head>
                 <title>{siteTitle}</title>
             </Head>
-
-            <Center className={classes.card_container} mx="auto" maw="40em">
-                <Card withBorder shadow="sm" radius="md" px="1em" py="0" className={classes.card}>
-                    <Group noWrap spacing={0}>
-                        <Avatar size="6em" variant="filled" color="red.9" src={<User color='plain' />} radius="0" />
-                        <div className={classes.body}>
-                            <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
-                                Name: <Text span className={classes.subtitle} color="black" fw={700}>Example</Text>
-                            </Text>
-                            <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
-                                Email: <Text span className={classes.subtitle} color="black" fw={700}>example@gmail.com</Text>
-                            </Text>
-                            <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
-                                Balance: <Text span className={classes.subtitle} color="black" weight={700}>$100</Text>
-                            </Text>
-                        </div>
-                    </Group>
-                </Card>
-            </Center>
-            <hr />
-            <Container radius={0} px={20} mb="1em" mih="8em">
-                <Title order={2} mt="md" mb={5}>
-                    All Data
-                </Title>
-                <ScrollArea className={classes.table} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
-                    <Table highlightOnHover striped>
-                        <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Password</th>
-                                <th>Balance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.map(user => (
-                                <tr key={user.id}>
-                                    <td>{user.name}</td>
-                                    <td>{user.email}</td>
-                                    <td>{user.password}</td>
-                                    <td>$ {user.balance}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </ScrollArea>
-            </Container>
+            {user ? (
+                <>
+                    <Center className={classes.card_container} mx="auto" maw="40em">
+                        <Card withBorder shadow="sm" radius="md" px="1em" py="0" className={classes.card}>
+                            <Group noWrap spacing={0}>
+                                <Avatar size="6em" variant="filled" color="red.9" src={<User color='plain' />} radius="0" />
+                                <div className={classes.body}>
+                                    <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
+                                        Name: <Text span className={classes.subtitle} color="black" fw={700}>Example</Text>
+                                    </Text>
+                                    <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
+                                        Email: <Text span className={classes.subtitle} color="black" fw={700}>example@gmail.com</Text>
+                                    </Text>
+                                    <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
+                                        Balance: <Text span className={classes.subtitle} color="black" weight={700}>$100</Text>
+                                    </Text>
+                                </div>
+                            </Group>
+                        </Card>
+                    </Center>
+                    <hr />
+                    <Container radius={0} px={20} mb="1em" mih="8em">
+                        <Title order={2} mt="md" mb={5}>
+                            All Data
+                        </Title>
+                        <ScrollArea className={classes.table} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+                            <Table highlightOnHover striped>
+                                <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Password</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {data.map(user => (
+                                        <tr key={user.id}>
+                                            <td>{user.name}</td>
+                                            <td>{user.email}</td>
+                                            <td>{user.password}</td>
+                                            <td>$ {user.balance}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </ScrollArea>
+                    </Container>
+                </>
+            ) : (
+                <Text fw={700} ta="center" mt="xl">
+                    Please {' '}
+                    <Anchor href="/createaccount" weight={700}>
+                        register {' '}
+                    </Anchor>
+                    or {' '}
+                    <Anchor href="/login" weight={700}>
+                        login {' '}
+                    </Anchor>
+                    to get access to the content.
+                </Text>
+            )}
         </Layout>
     );
 }

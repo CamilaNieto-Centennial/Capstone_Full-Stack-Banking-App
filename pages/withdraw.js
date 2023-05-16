@@ -4,7 +4,8 @@ import Layout, { siteTitle } from '../components/layout';
 import { Card, Table, BankForm } from '../components/context';
 import { UserContext, UserProvider } from '../components/userContext';
 import NavBar from '../components/navbar';
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { auth } from '../lib/initAuth';
 
 import {
     Title,
@@ -54,25 +55,64 @@ const useStyles = createStyles((theme) => ({
 export function Withdraw() {
     const { classes } = useStyles();
 
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((authUser) => {
+            if (authUser) {
+                // User is signed in
+                setUser(authUser);
+            } else {
+                // User is signed out
+                setUser(null);
+            }
+        });
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
     return (
         <Layout>
             <Head>
                 <title>{siteTitle}</title>
             </Head>
-            <div className={classes.full_container}>
-                <Paper className={classes.form_container} radius={0} p={30}>
-                    <Title order={2} className={classes.title} ta="center" mb="xs">Withdraw</Title>
+            {user ? (
+                <div className={classes.full_container}>
+                    <Paper className={classes.form_container} radius={0} p={30}>
+                        <Title order={2} className={classes.title} ta="center" mb="xs">Withdraw</Title>
 
-                    <Title order={3} className={classes.title} mb="0">Guest</Title>
-                    <Text mt=".2rem" weight={500}>Balance <Text span fw={700}>$ 0</Text></Text>
-                    <TextInput label="Withdraw Amount" placeholder="$$$" size="md" mt=".8rem" />
-                    <Button variant="light" color="blue" fullWidth mt="md" radius="md">
-                        Withdraw
-                    </Button>
-                    <br />
-                </Paper>
-                <div className={classes.image_container}></div>
-            </div>
+                        <Title order={3} className={classes.title} mb="0">Guest</Title>
+                        <Text mt=".2rem" weight={500}>Balance <Text span fw={700}>$ 0</Text></Text>
+                        <TextInput label="Withdraw Amount" placeholder="$$$" size="md" mt=".8rem" />
+                        <Button variant="light" color="blue" fullWidth mt="md" radius="md">
+                            Withdraw
+                        </Button>
+                        <br />
+                    </Paper>
+                    <div className={classes.image_container}></div>
+                </div>
+            ) : (
+                <div className={classes.full_container}>
+                    <Paper className={classes.form_container} radius={0} p={30}>
+                        <Title order={2} className={classes.title} ta="center" mb="xs">Withdraw</Title>
+
+                        <Text fw={700} ta="center" mt="xs">
+                            Please {' '}
+                            <Anchor href="/createaccount" weight={700}>
+                                register {' '}
+                            </Anchor>
+                            or {' '}
+                            <Anchor href="/login" weight={700}>
+                                login {' '}
+                            </Anchor>
+                            to get access to the content.
+                        </Text>
+                        <br />
+                    </Paper>
+                    <div className={classes.image_container}></div>
+                </div>
+            )}
         </Layout>
     );
 }
