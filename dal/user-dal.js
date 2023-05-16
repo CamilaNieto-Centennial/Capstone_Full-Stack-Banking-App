@@ -13,7 +13,11 @@ export const getAllUsers = async () => {
 };
 
 export const createUser = async (userData) => {
-    const user = new User(userData);
+    // Assign a random account number to the user
+    const user = new User({
+        ...userData,
+        accountNumber: generateAccountNumber(),
+    });
     return await user.save();
 };
 
@@ -25,3 +29,9 @@ export const updateUserById = async (id, userData) => {
 export const deleteUserById = async (id) => {
     return await User.findByIdAndDelete(id);
 };
+
+function generateAccountNumber() {
+    // Generate a random account number
+    const randomNumber = Math.floor(Math.random() * 9000000000) + 1000000000;
+    return randomNumber.toString();
+}

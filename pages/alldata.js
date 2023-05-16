@@ -41,7 +41,7 @@ const useStyles = createStyles((theme) => ({
     card: {
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
         padding: '0em',
-        width: '27em',
+        width: '30em',
 
         [theme.fn.smallerThan('xs')]: {
             width: '19em',
@@ -52,7 +52,7 @@ const useStyles = createStyles((theme) => ({
         fontWeight: 700,
         textTransform: "uppercase",
         fontFamily: `BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji ${theme.fontFamily}`,
-        lineHeight: 1.2,
+        lineHeight: 1.1,
 
         [theme.fn.smallerThan('xs')]: {
             fontSize: '.9em',
@@ -63,7 +63,7 @@ const useStyles = createStyles((theme) => ({
         fontWeight: 700,
         textTransform: "none",
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-        lineHeight: 1.2,
+        lineHeight: 1.1,
 
         [theme.fn.smallerThan('xs')]: {
             fontSize: '.95em',
@@ -114,6 +114,8 @@ function AllData() {
     const [user, setUser] = useState(null);
     const [userName, setUserName] = useState('');
     const [balance, setBalance] = useState(0);
+    const [password, setPassword] = useState('');
+    const [accountNumber, setAccountNumber] = useState('');
     const { userEmail } = useContext(UserContext);
 
     useEffect(() => {
@@ -135,6 +137,8 @@ function AllData() {
                         const user = await response.json();
                         setUserName(user.name);
                         setBalance(user.balance);
+                        setPassword(user.password);
+                        setAccountNumber(user.accountNumber)
                     }
                 }
             } catch (error) {
@@ -170,7 +174,7 @@ function AllData() {
                     <Center className={classes.card_container} mx="auto" maw="40em">
                         <Card withBorder shadow="sm" radius="md" px="1em" py="0" className={classes.card}>
                             <Group noWrap spacing={0}>
-                                <Avatar size="6em" variant="filled" color="red.9" src="/images/user.png" radius="0" />
+                                <Avatar size="4em" variant="filled" color="red.9" src="/images/user.png" radius="0" />
                                 <div className={classes.body}>
                                     <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
                                         Name: <Text span className={classes.subtitle} color="black" fw={700}>{userName || 'Guest'}</Text>
@@ -179,7 +183,13 @@ function AllData() {
                                         Email: <Text span className={classes.subtitle} color="black" fw={700}>{userEmail || 'guest@gmail.com'}</Text>
                                     </Text>
                                     <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
+                                        Password: <Text span className={classes.subtitle} color="black" weight={700}>{password !== "" ? password : ''}</Text>
+                                    </Text>
+                                    <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
                                         Balance: <Text span className={classes.subtitle} color="black" weight={700}>${balance !== null ? balance : '-'}</Text>
+                                    </Text>
+                                    <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
+                                        Account No: <Text span className={classes.subtitle} color="black" weight={700}>{accountNumber !== "" ? accountNumber : ''}</Text>
                                     </Text>
                                 </div>
                             </Group>
@@ -196,7 +206,6 @@ function AllData() {
                                     <tr>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        <th>Password</th>
                                         <th>Balance</th>
                                     </tr>
                                 </thead>
@@ -205,7 +214,6 @@ function AllData() {
                                         <tr key={user.id}>
                                             <td>{user.name}</td>
                                             <td>{user.email}</td>
-                                            <td>{user.password}</td>
                                             <td>$ {user.balance}</td>
                                         </tr>
                                     ))}

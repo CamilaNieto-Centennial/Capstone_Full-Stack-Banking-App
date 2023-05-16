@@ -32,7 +32,7 @@ const useStyles = createStyles((theme) => ({
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
         fontSize: theme.fontSizes.md,
 
-        [theme.fn.smallerThan('md')]: {
+        [theme.fn.smallerThan('lg')]: {
             height: rem(42),
             display: 'flex',
             alignItems: 'center',
@@ -67,14 +67,14 @@ const useStyles = createStyles((theme) => ({
     },
 
     hiddenMobile: {
-        [theme.fn.smallerThan('md')]: {
+        [theme.fn.smallerThan('lg')]: {
             display: 'none',
         },
     },
 
     hiddenDesktop: {
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-        [theme.fn.largerThan('md')]: {
+        [theme.fn.largerThan('lg')]: {
             display: 'none',
         },
     },
