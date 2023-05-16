@@ -170,7 +170,7 @@ function AllData() {
                     <Center className={classes.card_container} mx="auto" maw="40em">
                         <Card withBorder shadow="sm" radius="md" px="1em" py="0" className={classes.card}>
                             <Group noWrap spacing={0}>
-                                <Avatar size="6em" variant="filled" color="red.9" src={<User color='plain' />} radius="0" />
+                                <Avatar size="6em" variant="filled" color="red.9" src="/images/user.png" radius="0" />
                                 <div className={classes.body}>
                                     <Text className={classes.title} color="dimmed" mt="md" mb="md" size="lg">
                                         Name: <Text span className={classes.subtitle} color="black" fw={700}>{userName || 'Guest'}</Text>
