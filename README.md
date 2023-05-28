@@ -1,34 +1,27 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# TRANZZACTO
+#### Project made for MITxPro Certificate: Full Stack Development with MERN - Capstone Project
+#### <a href="https://camila-nietofullstackbankingapplication.vercel.app/">Link of the Project</a>
+<h3>Description:</h3>
+<p>This project is a responsive webpage perfect for banks. The goal of this project is to offer the user an opportunity to create an account, so can simulate the withdrawal and deposit actions, and be able to check the info about his/her account, and others. Please keep in mind that this is not an official website that shows up as a real banking webpage. I am just a developer who wants to showcase a cool website.</p>
+<p>The website has different features. To get access to different pages of the application, the user must log in or register. Once that is done, the user will be able to explore the full webpage.</p>
 
-## Getting Started
+<h3>Tech Stack:</h3>
+<ul>
+<li>Next.js</li>
+<li>React.js</li>
+<li>Mantine UI</li>
+<li>MongoDB</li>
+<li>Node.js</li>
+<li>Express.js</li>
+<li>Firebase Authentication</li>
+</ul>
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+<h3>How to Run the website locally:</h3>
+After you clone this repository, you must follow these steps:
+<ul>
+    <li>Go to the folder where you cloned the repository. Copy the path of it, and open your terminal. There you need to type <strong><code>cd YOUR_PATH</code></strong> . Now go inside the <strong>Full-Stack-Banking-App</strong> folder, by doing <strong><code>cd Full-Stack-Banking-App</code></strong>. If you do <strong><code>ls</code></strong> you will be able to find the following files: <code>components dal lib models pages public styles .gitignore database.js index.js jsconfig.json LICENSE next.config.js package-lock.json package.json README.md</code></li>
+    <li>Now, install the <strong>node_modules</strong> folder by typing <strong><code>npm install</code></strong></li>
+    <li>Once the installation is done, create a file called <strong>.env.local</strong> There you will need to add the following environment variables like the MongoDB and Firebase keys with their values respectively. I won't share my personal keys in GitHub for security and privacy reasons.
+    <li>Type <strong><code>npm run dev</code></strong></li>
+    <li>Copy the URL given on the terminal, and paste it into your browser. Or for simplicity, open <a href="http://localhost:3000">http://localhost:3000</a> with your browser to see the result.</li>
+</ul>
