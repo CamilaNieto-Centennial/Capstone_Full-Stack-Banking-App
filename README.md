@@ -1,5 +1,5 @@
 # TRANZZACTO
-#### Project made for MITxPro Certificate: Full Stack Development with MERN - Capstone Project
+
 #### <a href="https://camila-nietofullstackbankingapplication.vercel.app/">Link of the Project</a>
 <h3>Description:</h3>
 <p>This project is a responsive webpage perfect for banks. The goal of this project is to offer the user an opportunity to create an account, so can simulate the withdrawal and deposit actions, and be able to check the info about his/her account, and others. Please keep in mind that this is not an official website that shows up as a real banking webpage. I am just a developer who wants to showcase a cool website.</p>
